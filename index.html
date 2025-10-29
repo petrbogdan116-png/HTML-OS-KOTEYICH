@@ -972,7 +972,7 @@
                 <button id="home-button" onclick="loadHome()">Главная</button>
             </div>
             <div id="browser-page">
-                <p>Добро пожаловать в браузер! Введите адрес, например: antivirus.com, rockstargames.com, minecraft.net, budka.nett, compshop.cat, calculator.com, freegames.ru, news.com, messenger.com, googlepay.com</p>
+                <p>Добро пожаловать в браузер! Введите адрес, например: antivirus.com, rockstargames.com, minecraft.net, budka.nett, compshop.cat, calculator.com, freegames.ru, news.com, messenger.com</p>
             </div>
         </div>
     </div>
@@ -1147,8 +1147,6 @@
         let hasDiskD = false;
         let balance = 0;
         let ultraWifi = false;
-        let googlePayActive = false;
-        let googlePayInterval;
         let files = [
             { name: 'system32.dll', desc: 'Основной системный файл', size: '5 МБ', deleted: false },
             { name: 'boot.ini', desc: 'Конфигурация загрузки', size: '1 КБ', deleted: false },
@@ -1453,22 +1451,6 @@
             alert('ULTRAWIFI куплен! Теперь загрузки за 2с, открытие страниц за 1с.');
         }
 
-        // Пополнить баланс через Google Pay
-        function replenishBalance() {
-            if (!googlePayActive) {
-                googlePayActive = true;
-                googlePayInterval = setInterval(() => {
-                    balance += 20;
-                    updateBalance();
-                    alert('Автопополнение Google Pay: +20$');
-                }, 600000); // 10 минут
-                alert('Автопополнение активировано! Каждые 10 минут +20$.');
-            }
-            balance += 20;
-            updateBalance();
-            alert('Пополнено: +20$');
-        }
-
         // Рендер списка файлов
         function renderFilesList() {
             const list = document.getElementById('files-list');
@@ -1698,7 +1680,7 @@
             const addressInput = document.getElementById('browser-address');
             addressInput.value = '';
             const page = document.getElementById('browser-page');
-            page.innerHTML = '<p>Добро пожаловать в браузер! Введите адрес, например: antivirus.com, rockstargames.com, minecraft.net, budka.nett, compshop.cat, calculator.com, freegames.ru, news.com, messenger.com, googlepay.com</p>';
+            page.innerHTML = '<p>Добро пожаловать в браузер! Введите адрес, например: antivirus.com, rockstargames.com, minecraft.net, budka.nett, compshop.cat, calculator.com, freegames.ru, news.com, messenger.com</p>';
         }
 
         // Загрузка страницы в браузере
@@ -1731,8 +1713,6 @@
                     page.innerHTML = '<h3>News.com</h3><p>Новости дня (Безопасно, 0 МБ)</p><p>Последние новости: Мир в порядке.</p>';
                 } else if (address === 'messenger.com') {
                     page.innerHTML = '<h3>Messenger.com</h3><p>Откройте мессенджер для чата (0 МБ)</p><button class="download-button" onclick="openWindow(\'messenger\')">Открыть</button>';
-                } else if (address === 'googlepay.com') {
-                    page.innerHTML = '<h3>Google Pay</h3><p>Пополните счёт для получения валюты. Автопополнение каждые 10 мин на +20$ после активации.</p><button class="buy-button" onclick="replenishBalance()">Пополнить (+20$)</button><p>Текущий баланс: $' + balance + '</p>';
                 } else {
                     page.innerHTML = '<p>Страница не найдена.</p>';
                 }
