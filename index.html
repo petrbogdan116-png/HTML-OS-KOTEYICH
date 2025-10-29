@@ -11,6 +11,7 @@
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
+            transition: background-color 1s;
         }
         #install-screen {
             width: 100vw;
@@ -97,8 +98,23 @@
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #00c6ff, #0072ff);
-            transition: width 10s ease-in-out;
+            transition: width 3s ease-in-out;
             border-radius: 10px;
+            position: relative;
+        }
+        #loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 1.5s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
         #loading-text {
             margin-top: 10px;
@@ -112,6 +128,7 @@
             position: relative;
             background: linear-gradient(to bottom, #1e3c72, #2a5298);
             display: none;
+            transition: background 1s;
         }
         .icon {
             position: absolute;
@@ -148,6 +165,27 @@
             padding: 0 10px;
             box-shadow: 0 -2px 20px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
+            overflow-x: auto;
+        }
+        #taskbar-apps {
+            display: flex;
+            gap: 5px;
+            margin-left: 10px;
+            flex: 1;
+        }
+        .taskbar-app {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .taskbar-app:hover {
+            background: rgba(255,255,255,0.2);
         }
         #start-button {
             background: linear-gradient(45deg, #00d4ff, #0099cc);
@@ -165,7 +203,7 @@
             color: white;
             font-size: 20px;
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: auto;
             padding: 5px;
             border-radius: 50%;
             transition: background 0.2s;
@@ -174,9 +212,15 @@
             background: rgba(255,255,255,0.1);
         }
         #clock {
-            margin-left: auto;
             font-size: 14px;
             font-weight: bold;
+            margin-left: 10px;
+        }
+        #balance {
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 10px;
+            color: #ffd700;
         }
         #start-menu {
             position: fixed;
@@ -257,12 +301,25 @@
             display: flex;
             flex-direction: column;
         }
-        #browser-address {
-            width: 100%;
-            padding: 10px;
+        #browser-address-bar {
+            display: flex;
             margin-bottom: 10px;
+        }
+        #browser-address {
+            flex: 1;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 5px 0 0 5px;
+        }
+        #home-button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 0 5px 5px 0;
+            background: #f0f0f0;
+            cursor: pointer;
+        }
+        #home-button:hover {
+            background: #e0e0e0;
         }
         #browser-page {
             flex-grow: 1;
@@ -390,6 +447,75 @@
             border-radius: 5px;
             font-weight: bold;
         }
+        #rsod {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ff0000;
+            color: white;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2000;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding: 20px;
+        }
+        #rsod h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        #rsod p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+        #cmd-window {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            color: #00ff00;
+            display: none;
+            justify-content: flex-start;
+            align-items: flex-start;
+            flex-direction: column;
+            z-index: 2001;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        #cmd-output {
+            flex-grow: 1;
+            white-space: pre-wrap;
+            font-size: 16px;
+        }
+        #cmd-input {
+            background: black;
+            color: #00ff00;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+        }
+        #restore-dots {
+            font-size: 24px;
+            color: #00ff00;
+            margin-top: 20px;
+            display: none;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
         .file-item {
             display: flex;
             justify-content: space-between;
@@ -416,9 +542,23 @@
             cursor: pointer;
             border-radius: 3px;
             font-size: 12px;
+            margin-left: 5px;
         }
         .file-delete:hover {
             background: #cc0000;
+        }
+        .file-rename {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .file-rename:hover {
+            background: #1976D2;
         }
         .file-restore {
             background: #4CAF50;
@@ -582,6 +722,87 @@
             font-size: 12px;
             margin-top: 5px;
         }
+        .download-progress {
+            width: 300px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .download-progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            transition: width linear;
+            border-radius: 10px;
+        }
+        #antivirus-scan-progress {
+            display: none;
+            margin: 10px 0;
+        }
+        #antivirus-virus-list {
+            margin-top: 10px;
+        }
+        .virus-item {
+            background: #ffdddd;
+            padding: 5px;
+            margin: 5px 0;
+            border-radius: 3px;
+            border-left: 4px solid #ff0000;
+        }
+        #context-menu {
+            position: fixed;
+            background: rgba(255,255,255,0.95);
+            color: black;
+            padding: 10px;
+            display: none;
+            border-radius: 5px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1002;
+        }
+        #context-menu button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin: 2px 0;
+            border: none;
+            background: #f0f0f0;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        #context-menu button:hover {
+            background: #e0e0e0;
+        }
+        #confirmation-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            display: none;
+            z-index: 1003;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        #confirmation-dialog button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #yes-btn {
+            background: #ff4444;
+            color: white;
+        }
+        #no-btn {
+            background: #4CAF50;
+            color: white;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/PointerLockControls.js"></script>
@@ -624,6 +845,27 @@
         <button onclick="startSystemRestore()">Восстановить систему</button>
     </div>
 
+    <!-- RSOD -->
+    <div id="rsod">
+        <h1>*** STOP: RED SCREEN OF DEATH ***</h1>
+        <p>CRITICAL ERROR: HIBERNATION/PAGEFILE CORRUPTED<br><br>
+        Нажмите ПРОБЕЛ для открытия командной строки восстановления.</p>
+    </div>
+
+    <!-- Командная строка -->
+    <div id="cmd-window">
+        <div id="cmd-output">C:\Recovery> </div>
+        <input type="text" id="cmd-input" autofocus onkeydown="handleCmd(event)">
+        <div id="restore-dots"></div>
+    </div>
+
+    <!-- Диалог подтверждения -->
+    <div id="confirmation-dialog">
+        <p>Вы точно хотите это сделать?!</p>
+        <button id="yes-btn" onclick="confirmDelete()">Да</button>
+        <button id="no-btn" onclick="cancelDelete()">Нет</button>
+    </div>
+
     <div id="desktop">
         <!-- Иконки на десктопе -->
         <div class="icon" id="files-icon" style="top: 20px; left: 20px;" ondblclick="openWindow('files')">
@@ -651,14 +893,23 @@
     <!-- Панель задач -->
     <div id="taskbar">
         <button id="start-button">Start</button>
+        <div id="taskbar-apps"></div>
         <button id="internet-button" onclick="openWindow('internet')">🌐</button>
         <div id="clock"></div>
+        <div id="balance">Баланс: $<span id="balance-value">0</span></div>
     </div>
     
     <!-- Меню Start -->
     <div id="start-menu">
         <button onclick="shutdown()">Выключить</button>
         <button onclick="restart()">Перезагрузить</button>
+    </div>
+
+    <!-- Контекстное меню -->
+    <div id="context-menu">
+        <button onclick="createNewFile()">Новый файл</button>
+        <button onclick="createNewFolder()">Новая папка</button>
+        <button onclick="openDesktopSettings()">Настройки рабочего стола</button>
     </div>
     
     <!-- Окно подключения к интернету -->
@@ -716,9 +967,12 @@
             </div>
         </div>
         <div class="window-content" id="browser-content">
-            <input type="text" id="browser-address" placeholder="Введите адрес..." onkeydown="if(event.keyCode==13) loadPage(this.value)">
+            <div id="browser-address-bar">
+                <input type="text" id="browser-address" placeholder="Введите адрес..." onkeydown="if(event.keyCode==13) loadPage(this.value)">
+                <button id="home-button" onclick="loadHome()">Главная</button>
+            </div>
             <div id="browser-page">
-                <p>Добро пожаловать в браузер! Введите адрес, например: antivirus.com, rockstargames.com, minecraft.net, budka.nett, compshop.cat, calculator.com, freegames.ru, news.com, messenger.com</p>
+                <p>Добро пожаловать в браузер! Введите адрес, например: antivirus.com, rockstargames.com, minecraft.net, budka.nett, compshop.cat, calculator.com, freegames.ru, news.com, messenger.com, googlepay.com</p>
             </div>
         </div>
     </div>
@@ -734,7 +988,14 @@
             </div>
         </div>
         <div class="window-content">
-            <p>Сканирование системы...</p>
+            <p>Считыватель вирусов: Сканирование системы...</p>
+            <div id="antivirus-scan-progress">
+                <div class="download-progress">
+                    <div class="download-progress-bar" id="scan-progress-bar"></div>
+                </div>
+                <p id="scan-text">Сканирование...</p>
+            </div>
+            <div id="antivirus-virus-list"></div>
             <button onclick="scanForVirus()">Сканировать и удалить вирусы</button>
         </div>
     </div>
@@ -879,9 +1140,15 @@
         let minecraftInstalled = false;
         let connection = 'none';
         const maximizedWindows = new Set();
+        let minimizedWindows = new Set();
+        let taskbarButtons = new Map();
         let freeSpaceC = 100;
         let freeSpaceD = 200;
         let hasDiskD = false;
+        let balance = 0;
+        let ultraWifi = false;
+        let googlePayActive = false;
+        let googlePayInterval;
         let files = [
             { name: 'system32.dll', desc: 'Основной системный файл', size: '5 МБ', deleted: false },
             { name: 'boot.ini', desc: 'Конфигурация загрузки', size: '1 КБ', deleted: false },
@@ -902,34 +1169,52 @@
         let currentUser = null;
         let messagesListener = null;
         let calcDisplay = '';
+        let rsodTriggeredFiles = [];
+        let dotInterval;
+        let restoreInterval;
+        let pendingDeleteFile = null;
+        let scanning = false;
+
+        function updateBalance() {
+            document.getElementById('balance-value').innerText = balance;
+        }
 
         // Установка OS
         document.getElementById('install-button').onclick = function() {
             document.getElementById('install-screen').style.display = 'none';
-            showLoading('Установка OS...', function() {
+            showLoadingAdvanced('Установка OS...', ['Инициализация...', 'Копирование файлов...', 'Настройка реестра...', 'Завершение...'], function() {
                 document.getElementById('boot-screen').style.display = 'flex';
-            });
+            }, 5000);
         };
 
         // Запуск OS
         document.getElementById('boot-button').onclick = function() {
             document.getElementById('boot-screen').style.display = 'none';
-            showLoading('Загрузка OS...', function() {
+            showLoadingAdvanced('Загрузка OS...', ['Загрузка ядра...', 'Инициализация драйверов...', 'Запуск служб...', 'Готово!'], function() {
                 document.getElementById('desktop').style.display = 'block';
                 document.getElementById('taskbar').style.display = 'flex';
-            });
+                updateBalance();
+            }, 4000);
         };
 
-        // Функция показа загрузки
-        function showLoading(text, callback, duration = 3000) {
+        // Улучшенная функция показа загрузки с изменением текста
+        function showLoadingAdvanced(text, stages, callback, duration = 3000) {
             document.getElementById('loading-screen').style.display = 'flex';
             document.getElementById('loading-text').innerText = text;
             document.getElementById('loading-bar').style.transition = `width ${duration / 1000}s ease-in-out`;
             document.getElementById('loading-bar').style.width = '0%';
+            let stageIndex = 0;
+            const stageInterval = setInterval(() => {
+                if (stageIndex < stages.length) {
+                    document.getElementById('loading-text').innerText = stages[stageIndex];
+                    stageIndex++;
+                }
+            }, duration / stages.length);
             setTimeout(() => {
                 document.getElementById('loading-bar').style.width = '100%';
             }, 100);
             setTimeout(() => {
+                clearInterval(stageInterval);
                 document.getElementById('loading-screen').style.display = 'none';
                 callback();
             }, duration);
@@ -955,6 +1240,7 @@
             document.getElementById('desktop').style.display = 'none';
             document.getElementById('taskbar').style.display = 'none';
             document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+            clearTaskbar();
             document.getElementById('boot-screen').style.display = 'flex';
         }
 
@@ -971,6 +1257,10 @@
         function openWindow(id) {
             const window = document.getElementById(id + '-window');
             window.style.display = 'flex';
+            if (minimizedWindows.has(id)) {
+                minimizedWindows.delete(id);
+                updateTaskbar(id, false);
+            }
             if (maximizedWindows.has(id)) {
                 toggleMaximizeWindow(id);
             }
@@ -986,6 +1276,11 @@
             if (id === 'minecraft' && minecraftInstalled) {
                 initMinecraft();
             }
+            if (id === 'antivirus') {
+                // Показать считыватель вирусов
+                document.querySelector('#antivirus-window p').innerText = 'Считыватель вирусов: Система чиста.';
+                document.getElementById('antivirus-virus-list').innerHTML = '';
+            }
             if (isInfected) {
                 setTimeout(showVirusAlert, 1000);
             }
@@ -996,9 +1291,14 @@
             const window = document.getElementById(id + '-window');
             window.style.display = 'none';
             maximizedWindows.delete(id);
+            minimizedWindows.delete(id);
+            updateTaskbar(id, false);
             if (id === 'messenger' && messagesListener) {
                 messagesListener.off();
                 messagesListener = null;
+            }
+            if (id === 'antivirus' && scanning) {
+                scanning = false;
             }
         }
 
@@ -1006,6 +1306,36 @@
         function minimizeWindow(id) {
             const window = document.getElementById(id + '-window');
             window.style.display = 'none';
+            if (!minimizedWindows.has(id)) {
+                minimizedWindows.add(id);
+                updateTaskbar(id, true);
+            }
+        }
+
+        function updateTaskbar(id, isMinimized) {
+            const taskbarApps = document.getElementById('taskbar-apps');
+            if (isMinimized) {
+                if (!taskbarButtons.has(id)) {
+                    const btn = document.createElement('button');
+                    btn.className = 'taskbar-app';
+                    btn.innerText = id.charAt(0).toUpperCase() + id.slice(1);
+                    btn.onclick = () => openWindow(id);
+                    taskbarApps.appendChild(btn);
+                    taskbarButtons.set(id, btn);
+                }
+            } else {
+                if (taskbarButtons.has(id)) {
+                    const btn = taskbarButtons.get(id);
+                    btn.remove();
+                    taskbarButtons.delete(id);
+                }
+            }
+        }
+
+        function clearTaskbar() {
+            minimizedWindows.clear();
+            taskbarButtons.forEach((btn) => btn.remove());
+            taskbarButtons.clear();
         }
 
         // Максимизация/восстановление окна
@@ -1048,8 +1378,19 @@
             closeWindow('internet');
         }
 
-        // Получить задержку загрузки
+        // Получить задержку загрузки для скачиваний
         function getDownloadDelay() {
+            if (ultraWifi) return 2000;
+            if (connection === 'none') {
+                alert('Нет подключения к интернету! Подключитесь через кнопку 🌐 в панели задач.');
+                return null;
+            }
+            return connection === 'bad' ? 5000 : 2000;
+        }
+
+        // Получить задержку для открытия страниц
+        function getPageDelay() {
+            if (ultraWifi) return 1000;
             if (connection === 'none') {
                 alert('Нет подключения к интернету! Подключитесь через кнопку 🌐 в панели задач.');
                 return null;
@@ -1087,11 +1428,45 @@
 
         // Купить Диск D
         function buyDiskD() {
+            if (balance < 100) {
+                alert('Недостаточно средств! Баланс: $' + balance);
+                return;
+            }
+            balance -= 100;
+            updateBalance();
             hasDiskD = true;
             freeSpaceD = 200;
             document.getElementById('disk-d-info').style.display = 'block';
             updateFreeSpaceD();
             alert('Диск D на 200 ГБ куплен и установлен!');
+        }
+
+        // Купить ULTRAWIFI
+        function buyUltraWifi() {
+            if (balance < 20) {
+                alert('Недостаточно средств! Баланс: $' + balance);
+                return;
+            }
+            balance -= 20;
+            updateBalance();
+            ultraWifi = true;
+            alert('ULTRAWIFI куплен! Теперь загрузки за 2с, открытие страниц за 1с.');
+        }
+
+        // Пополнить баланс через Google Pay
+        function replenishBalance() {
+            if (!googlePayActive) {
+                googlePayActive = true;
+                googlePayInterval = setInterval(() => {
+                    balance += 20;
+                    updateBalance();
+                    alert('Автопополнение Google Pay: +20$');
+                }, 600000); // 10 минут
+                alert('Автопополнение активировано! Каждые 10 минут +20$.');
+            }
+            balance += 20;
+            updateBalance();
+            alert('Пополнено: +20$');
         }
 
         // Рендер списка файлов
@@ -1106,7 +1481,8 @@
                     item.innerHTML = `
                         <span class="file-name">${file.name} - ${file.desc}</span>
                         <span class="file-size">(${file.size})</span>
-                        <button class="file-delete" onclick="deleteFile('${file.name}')">Удалить</button>
+                        <button class="file-rename" onclick="renameFile('${file.name}')">Переименовать</button>
+                        <button class="file-delete" onclick="promptDelete('${file.name}')">Удалить</button>
                     `;
                     list.appendChild(item);
                 } else {
@@ -1117,12 +1493,56 @@
             restoreBtn.style.display = hasDeleted ? 'block' : 'none';
         }
 
+        // Переименование файла
+        function renameFile(oldName) {
+            const newName = prompt('Новое имя файла:', oldName);
+            if (newName && newName !== oldName && newName.trim()) {
+                const file = files.find(f => f.name === oldName);
+                if (file) {
+                    file.name = newName.trim();
+                    renderFilesList();
+                    alert('Файл переименован.');
+                }
+            }
+        }
+
+        // Запрос на удаление файла
+        function promptDelete(name) {
+            pendingDeleteFile = name;
+            document.getElementById('confirmation-dialog').style.display = 'block';
+        }
+
+        // Подтверждение удаления
+        function confirmDelete() {
+            document.getElementById('confirmation-dialog').style.display = 'none';
+            if (pendingDeleteFile) {
+                deleteFile(pendingDeleteFile);
+                pendingDeleteFile = null;
+            }
+        }
+
+        // Отмена удаления
+        function cancelDelete() {
+            document.getElementById('confirmation-dialog').style.display = 'none';
+            pendingDeleteFile = null;
+        }
+
         // Удаление файла
         function deleteFile(name) {
             const file = files.find(f => f.name === name);
             if (file) {
                 file.deleted = true;
-                if (name === 'kernel.sys' || name === 'ntoskrnl.exe' || name === 'registry.dat') {
+                if (name === 'kernel.sys') {
+                    // White screen then BSOD
+                    document.body.style.backgroundColor = 'white';
+                    document.body.style.color = 'black';
+                    setTimeout(() => {
+                        showBSOD();
+                    }, 3000);
+                } else if (name === 'hiberfil.sys' || name === 'pagefile.sys') {
+                    rsodTriggeredFiles.push(name);
+                    showRSOD();
+                } else if (name === 'ntoskrnl.exe' || name === 'registry.dat') {
                     showBSOD();
                 } else {
                     alert('Файл удалён.');
@@ -1133,17 +1553,94 @@
 
         // Показ BSOD
         function showBSOD() {
+            document.body.style.backgroundColor = '';
+            document.body.style.color = '';
             document.getElementById('bsod').style.display = 'flex';
             document.body.style.overflow = 'hidden';
             document.getElementById('desktop').style.display = 'none';
             document.getElementById('taskbar').style.display = 'none';
             document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+            clearTaskbar();
         }
 
-        // Начать восстановление системы
+        // Показ RSOD
+        function showRSOD() {
+            document.getElementById('rsod').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.getElementById('desktop').style.display = 'none';
+            document.getElementById('taskbar').style.display = 'none';
+            document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+            clearTaskbar();
+            document.addEventListener('keydown', handleSpaceKey);
+        }
+
+        function handleSpaceKey(event) {
+            if (event.key === ' ') {
+                document.getElementById('rsod').style.display = 'none';
+                document.getElementById('cmd-window').style.display = 'flex';
+                document.getElementById('cmd-input').focus();
+                document.removeEventListener('keydown', handleSpaceKey);
+            }
+        }
+
+        // Обработка командной строки
+        function handleCmd(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('cmd-input');
+                const command = input.value.trim();
+                const output = document.getElementById('cmd-output');
+                output.textContent += command + '\n';
+                input.value = '';
+                if (command === 'SYS.REBOOT.BSD') {
+                    startRestoration();
+                } else {
+                    output.textContent += 'Неизвестная команда. Используйте SYS.REBOOT.BSD для восстановления.\n';
+                }
+                output.textContent += 'C:\Recovery> ';
+                output.scrollTop = output.scrollHeight;
+            }
+        }
+
+        function startRestoration() {
+            const output = document.getElementById('cmd-output');
+            output.textContent += 'Запуск восстановления...\n';
+            document.getElementById('cmd-input').style.display = 'none';
+            document.getElementById('restore-dots').style.display = 'block';
+            let dots = 0;
+            restoreInterval = setInterval(() => {
+                const text = 'Восстановление';
+                if (dots === 0) {
+                    document.getElementById('restore-dots').textContent = text + '.';
+                } else if (dots === 1) {
+                    document.getElementById('restore-dots').textContent = text + '..';
+                } else {
+                    document.getElementById('restore-dots').textContent = text + '...';
+                    dots = -1;
+                }
+                dots++;
+            }, 500); // Улучшено: 500ms для плавной анимации
+            setTimeout(() => {
+                clearInterval(restoreInterval);
+                // Restore files
+                rsodTriggeredFiles.forEach(fileName => {
+                    const file = files.find(f => f.name === fileName);
+                    if (file) file.deleted = false;
+                });
+                rsodTriggeredFiles = [];
+                document.getElementById('cmd-window').style.display = 'none';
+                document.getElementById('restore-dots').style.display = 'none';
+                document.body.style.overflow = 'hidden';
+                showLoadingAdvanced('ВОССТАНОВЛЕНИЕ ОС', ['Восстановление файлов...', 'Проверка целостности...', 'Перезагрузка...'], function() {
+                    document.getElementById('desktop').style.display = 'block';
+                    document.getElementById('taskbar').style.display = 'flex';
+                }, 2000);
+            }, 30000);
+        }
+
+        // Начать восстановление системы (BSOD)
         function startSystemRestore() {
             document.getElementById('bsod').style.display = 'none';
-            showLoading('ВОССТАНОВЛЕНИЕ ОС', function() {
+            showLoadingAdvanced('ВОССТАНОВЛЕНИЕ ОС', ['Анализ повреждений...', 'Восстановление ядра...', 'Финализация...'], function() {
                 restoreSystemAfterLoad();
             }, 10000);
         }
@@ -1196,14 +1693,26 @@
             };
         });
 
+        // Главная страница браузера
+        function loadHome() {
+            const addressInput = document.getElementById('browser-address');
+            addressInput.value = '';
+            const page = document.getElementById('browser-page');
+            page.innerHTML = '<p>Добро пожаловать в браузер! Введите адрес, например: antivirus.com, rockstargames.com, minecraft.net, budka.nett, compshop.cat, calculator.com, freegames.ru, news.com, messenger.com, googlepay.com</p>';
+        }
+
         // Загрузка страницы в браузере
         function loadPage(address) {
             const page = document.getElementById('browser-page');
-            const delay = getDownloadDelay();
-            if (delay === null) return;
+            const pageDelay = getPageDelay();
+            if (pageDelay === null) return;
             page.innerHTML = '<p>Загрузка...</p>';
             setTimeout(() => {
                 address = address.toLowerCase();
+                if (!address || address === '') {
+                    loadHome();
+                    return;
+                }
                 if (address === 'antivirus.com') {
                     page.innerHTML = '<h3>Antivirus.com</h3><p>Скачайте антивирус! (20 МБ)</p><button class="download-button" onclick="downloadAntivirus()">Скачать</button>';
                 } else if (address === 'rockstargames.com') {
@@ -1213,7 +1722,7 @@
                 } else if (address === 'budka.nett') {
                     page.innerHTML = '<h3>БУДКА.nett</h3><p>Супер Артёмский блокнот (40 ГБ)</p><button class="download-button" onclick="downloadNotebook()">Скачать</button>';
                 } else if (address === 'compshop.cat') {
-                    page.innerHTML = '<h3>CompShop.cat</h3><p>Купите Диск D на 200 ГБ!</p><button class="buy-button" onclick="buyDiskD()">Купить (100$)</button>';
+                    page.innerHTML = '<h3>CompShop.cat</h3><p>Купите Диск D на 200 ГБ! (100$)</p><button class="buy-button" onclick="buyDiskD()">Купить</button><p>Купите ULTRAWIFI для супер-скорости! (20$)</p><button class="buy-button" onclick="buyUltraWifi()">Купить</button>';
                 } else if (address === 'calculator.com') {
                     page.innerHTML = '<h3>Calculator.com</h3><p>Скачайте калькулятор! (5 МБ)</p><button class="download-button" onclick="downloadCalculator()">Скачать</button>';
                 } else if (address === 'freegames.ru') {
@@ -1222,71 +1731,100 @@
                     page.innerHTML = '<h3>News.com</h3><p>Новости дня (Безопасно, 0 МБ)</p><p>Последние новости: Мир в порядке.</p>';
                 } else if (address === 'messenger.com') {
                     page.innerHTML = '<h3>Messenger.com</h3><p>Откройте мессенджер для чата (0 МБ)</p><button class="download-button" onclick="openWindow(\'messenger\')">Открыть</button>';
+                } else if (address === 'googlepay.com') {
+                    page.innerHTML = '<h3>Google Pay</h3><p>Пополните счёт для получения валюты. Автопополнение каждые 10 мин на +20$ после активации.</p><button class="buy-button" onclick="replenishBalance()">Пополнить (+20$)</button><p>Текущий баланс: $' + balance + '</p>';
                 } else {
                     page.innerHTML = '<p>Страница не найдена.</p>';
                 }
-            }, delay);
+            }, pageDelay);
         }
 
-        // Скачивание с выбором диска
-        function downloadWithDiskChoice(sizeGB, downloadFunc, successMsg) {
+        // Скачивание с выбором диска и анимацией прогресса
+        function downloadWithDiskChoice(sizeGB, downloadFunc, successMsg, page) {
             const delay = getDownloadDelay();
             if (delay === null) return;
-            alert('Скачивание начинается...');
+            page.innerHTML += '<div class="download-progress"><div class="download-progress-bar" id="dl-progress"></div></div><p>Скачивание в процессе...</p>';
+            const progressBar = document.getElementById('dl-progress');
+            progressBar.style.transition = `width ${delay / 1000}s linear`;
+            progressBar.style.width = '0%';
             setTimeout(() => {
-                if (hasDiskD) {
-                    let disk = prompt('На какой диск скачать? (C или D)');
-                    if (disk !== 'C' && disk !== 'D') {
-                        alert('Неверный выбор. Скачивание отменено.');
-                        return;
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    if (hasDiskD) {
+                        let disk = prompt('На какой диск скачать? (C или D)');
+                        if (disk !== 'C' && disk !== 'D') {
+                            alert('Неверный выбор. Скачивание отменено.');
+                            return;
+                        }
+                        if (!checkSpace(sizeGB, disk)) return;
+                    } else {
+                        if (!checkSpace(sizeGB, 'C')) return;
                     }
-                    if (!checkSpace(sizeGB, disk)) return;
-                } else {
-                    if (!checkSpace(sizeGB, 'C')) return;
-                }
-                downloadFunc();
-                alert(successMsg);
-            }, delay);
+                    downloadFunc();
+                    alert(successMsg);
+                    // Удалить прогресс после завершения
+                    const progressContainer = page.querySelector('.download-progress');
+                    if (progressContainer) progressContainer.remove();
+                    const p = page.querySelector('p:last-child');
+                    if (p && p.innerText.includes('процессе')) p.remove();
+                }, 100);
+            }, 10);
         }
 
         function downloadAntivirus() {
+            const page = document.getElementById('browser-page');
             downloadWithDiskChoice(0.02, function() {
                 document.getElementById('antivirus-icon').style.display = 'block';
-            }, 'Антивирус скачан!');
+            }, 'Антивирус скачан!', page);
         }
 
         function downloadVirus() {
+            const page = document.getElementById('browser-page');
             const delay = getDownloadDelay();
             if (delay === null) return;
-            alert('Скачивание начинается...');
+            page.innerHTML += '<div class="download-progress"><div class="download-progress-bar" id="dl-progress"></div></div><p>Скачивание вируса в процессе...</p>';
+            const progressBar = document.getElementById('dl-progress');
+            progressBar.style.transition = `width ${delay / 1000}s linear`;
+            progressBar.style.width = '0%';
             setTimeout(() => {
-                isInfected = true;
-                const desktop = document.getElementById('desktop');
-                desktop.style.background = 'linear-gradient(to bottom, #8B0000, #DC143C)';
-                desktop.classList.add('infected');
-                if (virusInterval) clearInterval(virusInterval);
-                virusInterval = setInterval(showVirusAlert, 3000);
-                alert('Вирус скачан! Система заражена.');
-            }, delay);
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    isInfected = true;
+                    const desktop = document.getElementById('desktop');
+                    desktop.style.background = 'linear-gradient(to bottom, #8B0000, #DC143C)';
+                    desktop.classList.add('infected');
+                    if (virusInterval) clearInterval(virusInterval);
+                    virusInterval = setInterval(showVirusAlert, 3000);
+                    alert('Вирус скачан! Система заражена.');
+                    // Удалить прогресс
+                    const progressContainer = page.querySelector('.download-progress');
+                    if (progressContainer) progressContainer.remove();
+                    const p = page.querySelector('p:last-child');
+                    if (p && p.innerText.includes('вируса')) p.remove();
+                }, 100);
+            }, 10);
         }
 
         function downloadMinecraft() {
+            const page = document.getElementById('browser-page');
             downloadWithDiskChoice(20, function() {
                 minecraftInstalled = true;
                 document.getElementById('minecraft-icon').style.display = 'block';
-            }, 'Minecraft 3D скачан!');
+            }, 'Minecraft 3D скачан!', page);
         }
 
         function downloadNotebook() {
+            const page = document.getElementById('browser-page');
             downloadWithDiskChoice(40, function() {
                 openWindow('notebook');
-            }, 'Супер Артёмский блокнот скачан! (Это тролль)');
+            }, 'Супер Артёмский блокнот скачан! (Это тролль)', page);
         }
 
         function downloadCalculator() {
+            const page = document.getElementById('browser-page');
             downloadWithDiskChoice(0.005, function() {
                 document.getElementById('calculator-icon').style.display = 'block';
-            }, 'Калькулятор скачан!');
+            }, 'Калькулятор скачан!', page);
         }
 
         // Алерт вируса
@@ -1294,21 +1832,57 @@
             document.getElementById('virus-alert').style.display = 'block';
         }
 
-        // Сканирование
+        // Сканирование с долгой загрузкой
         function scanForVirus() {
-            if (isInfected) {
-                isInfected = false;
-                const desktop = document.getElementById('desktop');
-                desktop.style.background = 'linear-gradient(to bottom, #1e3c72, #2a5298)';
-                desktop.classList.remove('infected');
-                if (virusInterval) {
-                    clearInterval(virusInterval);
-                    virusInterval = null;
+            if (scanning) return;
+            scanning = true;
+            const progressDiv = document.getElementById('antivirus-scan-progress');
+            const scanText = document.getElementById('scan-text');
+            const virusList = document.getElementById('antivirus-virus-list');
+            const progressBar = document.getElementById('scan-progress-bar');
+            progressDiv.style.display = 'block';
+            virusList.innerHTML = '';
+            scanText.innerText = 'Сканирование дисков...';
+            progressBar.style.width = '0%';
+            progressBar.style.transition = 'width 8s linear'; // Долгая загрузка 8 секунд
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 50);
+
+            let stages = ['Сканирование дисков...', 'Проверка реестра...', 'Анализ памяти...', 'Сканирование сетевых угроз...'];
+            let stageIndex = 0;
+            const stageInterval = setInterval(() => {
+                if (stageIndex < stages.length) {
+                    scanText.innerText = stages[stageIndex];
+                    stageIndex++;
                 }
-                alert('Вирус удалён!');
-            } else {
-                alert('Система чиста.');
-            }
+            }, 2000); // Стадии каждые 2 секунды
+
+            setTimeout(() => {
+                clearInterval(stageInterval);
+                if (isInfected) {
+                    scanText.innerText = 'Вирусы найдены!';
+                    virusList.innerHTML = '<div class="virus-item">Вирус: Trojan.GTA (в RockstarGames.exe)</div><div class="virus-item">Вирус: Malware.Game (в freegames.dll)</div>';
+                    setTimeout(() => {
+                        isInfected = false;
+                        const desktop = document.getElementById('desktop');
+                        desktop.style.background = 'linear-gradient(to bottom, #1e3c72, #2a5298)';
+                        desktop.classList.remove('infected');
+                        if (virusInterval) {
+                            clearInterval(virusInterval);
+                            virusInterval = null;
+                        }
+                        scanText.innerText = 'Вирусы удалены!';
+                        virusList.innerHTML = '';
+                        alert('Вирусы удалены!');
+                    }, 2000);
+                } else {
+                    scanText.innerText = 'Система чиста.';
+                    alert('Система чиста.');
+                }
+                scanning = false;
+                progressDiv.style.display = 'none';
+            }, 8000);
         }
 
         // Калькулятор функции
@@ -1449,6 +2023,45 @@
             messageDiv.className = 'message';
             messageDiv.innerText = msg;
             messagesDiv.appendChild(messageDiv);
+        }
+
+        // Контекстное меню
+        document.addEventListener('mousedown', function(event) {
+            if (event.button === 1) { // Средняя кнопка мыши (колесо)
+                event.preventDefault();
+                const contextMenu = document.getElementById('context-menu');
+                contextMenu.style.left = event.pageX + 'px';
+                contextMenu.style.top = event.pageY + 'px';
+                contextMenu.style.display = 'block';
+            } else {
+                document.getElementById('context-menu').style.display = 'none';
+            }
+        });
+
+        // Функции контекстного меню
+        function createNewFile() {
+            const name = prompt('Имя нового файла:');
+            if (name) {
+                files.push({ name: name, desc: 'Новый файл', size: '0 КБ', deleted: false });
+                alert('Файл создан: ' + name);
+                if (document.getElementById('files-window').style.display !== 'none') {
+                    renderFilesList();
+                }
+            }
+            document.getElementById('context-menu').style.display = 'none';
+        }
+
+        function createNewFolder() {
+            const name = prompt('Имя новой папки:');
+            if (name) {
+                alert('Папка создана: ' + name + ' (функционал папок в разработке)');
+            }
+            document.getElementById('context-menu').style.display = 'none';
+        }
+
+        function openDesktopSettings() {
+            alert('Настройки рабочего стола (функционал в разработке)');
+            document.getElementById('context-menu').style.display = 'none';
         }
 
         // Minecraft
