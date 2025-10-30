@@ -5,901 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Моя HTML OS</title>
     <style>
-        /* Твой оригинальный CSS без изменений */
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-            transition: background-color 1s;
-        }
-        #install-screen {
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(to bottom, #0f0f23, #1a1a2e);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1001;
-            flex-direction: column;
-        }
-        #install-button {
-            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 30px;
-            font-size: 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 25px;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        #install-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        #install-text {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        #boot-screen {
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(to bottom, #000, #333);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
-        #boot-button {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 15px 30px;
-            font-size: 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        #boot-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        #loading-screen {
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(to bottom, #000, #333);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 999;
-            flex-direction: column;
-        }
-        #loading-progress {
-            width: 300px;
-            height: 20px;
-            background-color: #333;
-            margin-top: 50px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-        }
-        #loading-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #00c6ff, #0072ff);
-            transition: width 3s ease-in-out;
-            border-radius: 10px;
-            position: relative;
-        }
-        #loading-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shine 1.5s infinite;
-        }
-        @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-        #loading-text {
-            margin-top: 10px;
-            font-size: 18px;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        #desktop {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            background: linear-gradient(to bottom, #1e3c72, #2a5298);
-            display: none;
-            transition: background 1s;
-        }
-        .icon {
-            position: absolute;
-            cursor: pointer;
-            text-align: center;
-            width: 80px;
-            transition: transform 0.2s;
-        }
-        .icon:hover {
-            transform: scale(1.1);
-        }
-        .icon img {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        .icon span {
-            display: block;
-            font-size: 12px;
-            color: white;
-            text-shadow: 1px 1px 2px black;
-            margin-top: 5px;
-        }
-        #taskbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: rgba(26, 26, 26, 0.95);
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            box-shadow: 0 -2px 20px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            overflow-x: auto;
-        }
-        #taskbar-apps {
-            display: flex;
-            gap: 5px;
-            margin-left: 10px;
-            flex: 1;
-        }
-        .taskbar-app {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 12px;
-            white-space: nowrap;
-            transition: background 0.2s;
-        }
-        .taskbar-app:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        #start-button {
-            background: linear-gradient(45deg, #00d4ff, #0099cc);
-            color: white;
-            padding: 8px 15px;
-            border: none;
-            cursor: pointer;
-            border-radius: 20px;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-        #internet-button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            margin-left: auto;
-            padding: 5px;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-        #internet-button:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        #clock {
-            font-size: 14px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        #balance {
-            font-size: 14px;
-            font-weight: bold;
-            margin-left: 10px;
-            color: #ffd700;
-        }
-        #start-menu {
-            position: fixed;
-            bottom: 50px;
-            left: 10px;
-            background: rgba(255,255,255,0.95);
-            color: black;
-            padding: 15px;
-            display: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-        }
-        #start-menu button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background: #f0f0f0;
-            transition: background 0.2s;
-        }
-        #start-menu button:hover {
-            background: #e0e0e0;
-        }
-        .window {
-            position: absolute;
-            background: rgba(255,255,255,0.95);
-            color: black;
-            border: 1px solid #ccc;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            min-width: 300px;
-            min-height: 200px;
-            display: none;
-            flex-direction: column;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .window-header {
-            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 10px 15px;
-            cursor: move;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .window-controls {
-            display: flex;
-            gap: 5px;
-        }
-        .window-minimize, .window-maximize, .window-close {
-            background: none;
-            border: none;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0 8px;
-            width: 25px;
-            height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-        .window-minimize:hover, .window-maximize:hover, .window-close:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        .window-content {
-            padding: 15px;
-            flex-grow: 1;
-            overflow: auto;
-        }
-        #browser-content {
-            display: flex;
-            flex-direction: column;
-        }
-        #browser-address-bar {
-            display: flex;
-            margin-bottom: 10px;
-        }
-        #browser-address {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px 0 0 5px;
-        }
-        #home-button {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 0 5px 5px 0;
-            background: #f0f0f0;
-            cursor: pointer;
-        }
-        #home-button:hover {
-            background: #e0e0e0;
-        }
-        #browser-page {
-            flex-grow: 1;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            overflow: auto;
-        }
-        .download-button {
-            background: linear-gradient(45deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .download-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .buy-button {
-            background: linear-gradient(45deg, #ff9800 0%, #f57c00 100%);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .buy-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .virus-button {
-            background: linear-gradient(45deg, #f44336 0%, #d32f2f 100%);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .virus-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        #antivirus-icon, #minecraft-icon, #calculator-icon {
-            display: none;
-            top: 20px;
-            left: 120px;
-        }
-        #minecraft-icon {
-            left: 320px;
-        }
-        #calculator-icon {
-            top: 20px;
-            left: 520px;
-        }
-        #googlepay-icon {
-            top: 20px;
-            left: 720px;
-            display: block;
-        }
-        #virus-alert {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(45deg, #ff0000, #cc0000);
-            color: white;
-            padding: 20px;
-            display: none;
-            z-index: 1000;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(255,0,0,0.5);
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.05); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        .infected {
-            animation: shake 0.5s infinite;
-        }
-        #bsod {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #0000a0;
-            color: white;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 2000;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            padding: 20px;
-        }
-        #bsod h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        #bsod p {
-            font-size: 18px;
-            margin-bottom: 40px;
-            line-height: 1.5;
-        }
-        #bsod button {
-            background: #00ff00;
-            color: black;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        #rsod {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #ff0000;
-            color: white;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 2000;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            padding: 20px;
-        }
-        #rsod h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        #rsod p {
-            font-size: 18px;
-            margin-bottom: 40px;
-            line-height: 1.5;
-        }
-        #cmd-window {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: black;
-            color: #00ff00;
-            display: none;
-            justify-content: flex-start;
-            align-items: flex-start;
-            flex-direction: column;
-            z-index: 2001;
-            font-family: 'Courier New', monospace;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        #cmd-output {
-            flex-grow: 1;
-            white-space: pre-wrap;
-            font-size: 16px;
-        }
-        #cmd-input {
-            background: black;
-            color: #00ff00;
-            border: none;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            width: 100%;
-            outline: none;
-        }
-        #restore-dots {
-            font-size: 24px;
-            color: #00ff00;
-            margin-top: 20px;
-            display: none;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.5; }
-        }
-        .file-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            transition: background 0.2s;
-        }
-        .file-item:hover {
-            background: #f0f0f0;
-        }
-        .file-name {
-            flex-grow: 1;
-        }
-        .file-size {
-            font-size: 12px;
-            color: #666;
-        }
-        .file-delete {
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 3px;
-            font-size: 12px;
-            margin-left: 5px;
-        }
-        .file-delete:hover {
-            background: #cc0000;
-        }
-        .file-rename {
-            background: #2196F3;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 3px;
-            font-size: 12px;
-            margin-left: 5px;
-        }
-        .file-rename:hover {
-            background: #1976D2;
-        }
-        .file-restore {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .file-restore:hover {
-            background: #45a049;
-        }
-        .disk-info {
-            background: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        #disk-d-info {
-            display: none;
-        }
-        #calculator-window {
-            width: 300px;
-            height: 400px;
-        }
-        #calculator-display {
-            width: 100%;
-            height: 60px;
-            font-size: 24px;
-            text-align: right;
-            padding: 0 10px;
-            border: none;
-            background: #f0f0f0;
-            margin-bottom: 10px;
-        }
-        .calc-button {
-            width: 70px;
-            height: 60px;
-            font-size: 18px;
-            border: none;
-            background: #e0e0e0;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 2px;
-        }
-        .calc-button:hover {
-            background: #d0d0d0;
-        }
-        .calc-operator {
-            background: #ff9500;
-            color: white;
-        }
-        .calc-operator:hover {
-            background: #e68900;
-        }
-        #messenger-window {
-            width: 500px;
-            height: 600px;
-        }
-        #messenger-login, #messenger-chat {
-            display: none;
-        }
-        #messenger-register {
-            display: block;
-        }
-        .form-group {
-            margin-bottom: 10px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .form-button {
-            background: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .form-button:hover {
-            background: #45a049;
-        }
-        #chat-messages {
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #ddd;
-            padding: 10px;
-            background: white;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-        .message {
-            margin-bottom: 5px;
-            padding: 5px;
-            background: #f0f0f0;
-            border-radius: 4px;
-        }
-        #chat-input {
-            width: 80%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        #send-button {
-            width: 18%;
-            padding: 8px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        #notebook-window {
-            background: black;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-        }
-        #notebook-window .window-header {
-            background: #333;
-        }
-        #notebook-window .window-content {
-            padding: 20px;
-            text-align: center;
-            font-size: 18px;
-            line-height: 1.5;
-        }
-        #minecraft-window {
-            width: 620px;
-            height: 420px;
-        }
-        #minecraft-container {
-            width: 100%;
-            height: 100%;
-            image-rendering: pixelated;
-        }
-        .network-option {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-        }
-        .network-option input[type="password"] {
-            margin-left: 10px;
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-        }
-        #peer-status {
-            color: #666;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        .download-progress {
-            width: 300px;
-            height: 20px;
-            background-color: #333;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        .download-progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #00c6ff, #0072ff);
-            transition: width linear;
-            border-radius: 10px;
-        }
-        #antivirus-scan-progress {
-            display: none;
-            margin: 10px 0;
-        }
-        #antivirus-virus-list {
-            margin-top: 10px;
-        }
-        .virus-item {
-            background: #ffdddd;
-            padding: 5px;
-            margin: 5px 0;
-            border-radius: 3px;
-            border-left: 4px solid #ff0000;
-        }
-        #context-menu {
-            position: fixed;
-            background: rgba(255,255,255,0.95);
-            color: black;
-            padding: 10px;
-            display: none;
-            border-radius: 5px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            z-index: 1002;
-        }
-        #context-menu button {
-            display: block;
-            width: 100%;
-            padding: 8px;
-            margin: 2px 0;
-            border: none;
-            background: #f0f0f0;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-        #context-menu button:hover {
-            background: #e0e0e0;
-        }
-        #confirmation-dialog {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            color: black;
-            padding: 20px;
-            display: none;
-            z-index: 1003;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-        #confirmation-dialog button {
-            margin: 10px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #yes-btn {
-            background: #ff4444;
-            color: white;
-        }
-        #no-btn {
-            background: #4CAF50;
-            color: white;
-        }
-
-        /* NEW: Стили для экрана логина OS */
-        #login-screen {
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(to bottom, #0f0f23, #1a1a2e);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1002;
-            flex-direction: column;
-            color: white;
-        }
-        #login-screen h2 {
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        #login-screen input {
-            width: 300px;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        #login-screen button {
-            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-        }
-        #login-screen button:hover {
-            transform: translateY(-2px);
-        }
-        #os-register, #os-login {
-            text-align: center;
-        }
-
-        /* NEW: Стили для Google Pay окна */
-        #googlepay-window {
-            width: 400px;
-            height: 300px;
-            top: 100px;
-            left: 400px;
-        }
-        #request-message {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-            color: #333;
-        }
-        #request-textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            resize: vertical;
-            margin-bottom: 10px;
-            font-family: inherit;
-        }
-        #send-request-btn {
-            background: linear-gradient(45deg, #4285f4, #34a853);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-        }
-        #send-request-btn:hover {
-            background: linear-gradient(45deg, #3367d6, #2d8e3e);
-        }
-        #request-status {
-            margin-top: 10px;
-            text-align: center;
-            color: #666;
-        }
+        /* Твой оригинальный CSS без изменений — вставь весь CSS из предыдущего кода сюда, чтобы не дублировать */
+        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; transition: background-color 1s; }
+        #install-screen { width: 100vw; height: 100vh; background: linear-gradient(to bottom, #0f0f23, #1a1a2e); display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; z-index: 1001; flex-direction: column; }
+        #install-button { background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; font-size: 20px; border: none; cursor: pointer; border-radius: 25px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        #install-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        #install-text { font-size: 24px; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        #boot-screen { width: 100vw; height: 100vh; background: linear-gradient(to bottom, #000, #333); display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; z-index: 1000; }
+        #boot-button { background: linear-gradient(45deg, #ff6b6b, #ee5a24); color: white; padding: 15px 30px; font-size: 20px; border: none; cursor: pointer; border-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        #boot-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+        #loading-screen { width: 100vw; height: 100vh; background: linear-gradient(to bottom, #000, #333); display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; z-index: 999; flex-direction: column; }
+        #loading-progress { width: 300px; height: 20px; background-color: #333; margin-top: 50px; border-radius: 10px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
+        #loading-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #00c6ff, #0072ff); transition: width 3s ease-in-out; border-radius: 10px; position: relative; }
+        #loading-bar::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shine 1.5s infinite; }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
+        #loading-text { margin-top: 10px; font-size: 18px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        #desktop { width: 100vw; height: 100vh; position: relative; background: linear-gradient(to bottom, #1e3c72, #2a5298); display: none; transition: background 1s; }
+        .icon { position: absolute; cursor: pointer; text-align: center; width: 80px; transition: transform 0.2s; }
+        .icon:hover { transform: scale(1.1); }
+        .icon img { width: 48px; height: 48px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .icon span { display: block; font-size: 12px; color: white; text-shadow: 1px 1px 2px black; margin-top: 5px; }
+        #taskbar { position: fixed; bottom: 0; left: 0; width: 100%; height: 50px; background: rgba(26, 26, 26, 0.95); display: flex; align-items: center; padding: 0 10px; box-shadow: 0 -2px 20px rgba(0,0,0,0.5); backdrop-filter: blur(10px); overflow-x: auto; }
+        #taskbar-apps { display: flex; gap: 5px; margin-left: 10px; flex: 1; }
+        .taskbar-app { background: rgba(255,255,255,0.1); color: white; padding: 5px 10px; border: none; cursor: pointer; border-radius: 5px; font-size: 12px; white-space: nowrap; transition: background 0.2s; }
+        .taskbar-app:hover { background: rgba(255,255,255,0.2); }
+        #start-button { background: linear-gradient(45deg, #00d4ff, #0099cc); color: white; padding: 8px 15px; border: none; cursor: pointer; border-radius: 20px; margin-right: 10px; font-weight: bold; }
+        #internet-button { background: none; border: none; color: white; font-size: 20px; cursor: pointer; margin-left: auto; padding: 5px; border-radius: 50%; transition: background 0.2s; }
+        #internet-button:hover { background: rgba(255,255,255,0.1); }
+        #clock { font-size: 14px; font-weight: bold; margin-left: 10px; }
+        #balance { font-size: 14px; font-weight: bold; margin-left: 10px; color: #ffd700; }
+        #start-menu { position: fixed; bottom: 50px; left: 10px; background: rgba(255,255,255,0.95); color: black; padding: 15px; display: none; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
+        #start-menu button { display: block; width: 100%; padding: 10px; margin: 5px 0; cursor: pointer; border: none; border-radius: 5px; background: #f0f0f0; transition: background 0.2s; }
+        #start-menu button:hover { background: #e0e0e0; }
+        .window { position: absolute; background: rgba(255,255,255,0.95); color: black; border: 1px solid #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.3); min-width: 300px; min-height: 200px; display: none; flex-direction: column; border-radius: 10px; overflow: hidden; }
+        .window-header { background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 15px; cursor: move; display: flex; justify-content: space-between; align-items: center; }
+        .window-controls { display: flex; gap: 5px; }
+        .window-minimize, .window-maximize, .window-close { background: none; border: none; color: white; font-weight: bold; cursor: pointer; padding: 0 8px; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background 0.2s; }
+        .window-minimize:hover, .window-maximize:hover, .window-close:hover { background: rgba(255,255,255,0.2); }
+        .window-content { padding: 15px; flex-grow: 1; overflow: auto; }
+        #browser-content { display: flex; flex-direction: column; }
+        #browser-address-bar { display: flex; margin-bottom: 10px; }
+        #browser-address { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px 0 0 5px; }
+        #home-button { padding: 10px; border: 1px solid #ddd; border-radius: 0 5px 5px 0; background: #f0f0f0; cursor: pointer; }
+        #home-button:hover { background: #e0e0e0; }
+        #browser-page { flex-grow: 1; background-color: #f9f9f9; padding: 15px; border-radius: 5px; overflow: auto; }
+        .download-button { background: linear-gradient(45deg, #4CAF50 0%, #45a049 100%); color: white; padding: 10px 15px; border: none; cursor: pointer; margin: 10px 0; border-radius: 5px; font-weight: bold; }
+        .download-button:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .buy-button { background: linear-gradient(45deg, #ff9800 0%, #f57c00 100%); color: white; padding: 10px 15px; border: none; cursor: pointer; margin: 10px 0; border-radius: 5px; font-weight: bold; }
+        .buy-button:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .virus-button { background: linear-gradient(45deg, #f44336 0%, #d32f2f 100%); color: white; padding: 10px 15px; border: none; cursor: pointer; margin: 10px 0; border-radius: 5px; font-weight: bold; }
+        .virus-button:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        #antivirus-icon, #minecraft-icon, #calculator-icon { display: none; top: 20px; left: 120px; }
+        #minecraft-icon { left: 320px; }
+        #calculator-icon { top: 20px; left: 520px; }
+        #googlepay-icon { top: 20px; left: 720px; display: block; }
+        #virus-alert { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(45deg, #ff0000, #cc0000); color: white; padding: 20px; display: none; z-index: 1000; text-align: center; border-radius: 10px; box-shadow: 0 4px 20px rgba(255,0,0,0.5); animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.05); } 100% { transform: translate(-50%, -50%) scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
+        .infected { animation: shake 0.5s infinite; }
+        #bsod { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #0000a0; color: white; display: none; justify-content: center; align-items: center; flex-direction: column; z-index: 2000; font-family: 'Courier New', monospace; text-align: center; padding: 20px; }
+        #bsod h1 { font-size: 48px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        #bsod p { font-size: 18px; margin-bottom: 40px; line-height: 1.5; }
+        #bsod button { background: #00ff00; color: black; padding: 10px 20px; font-size: 16px; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        #rsod { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ff0000; color: white; display: none; justify-content: center; align-items: center; flex-direction: column; z-index: 2000; font-family: 'Courier New', monospace; text-align: center; padding: 20px; }
+        #rsod h1 { font-size: 48px; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        #rsod p { font-size: 18px; margin-bottom: 40px; line-height: 1.5; }
+        #cmd-window { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: black; color: #00ff00; display: none; justify-content: flex-start; align-items: flex-start; flex-direction: column; z-index: 2001; font-family: 'Courier New', monospace; padding: 20px; overflow-y: auto; }
+        #cmd-output { flex-grow: 1; white-space: pre-wrap; font-size: 16px; }
+        #cmd-input { background: black; color: #00ff00; border: none; font-family: 'Courier New', monospace; font-size: 16px; width: 100%; outline: none; }
+        #restore-dots { font-size: 24px; color: #00ff00; margin-top: 20px; display: none; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
+        .file-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; transition: background 0.2s; }
+        .file-item:hover { background: #f0f0f0; }
+        .file-name { flex-grow: 1; }
+        .file-size { font-size: 12px; color: #666; }
+        .file-delete { background: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; font-size: 12px; margin-left: 5px; }
+        .file-delete:hover { background: #cc0000; }
+        .file-rename { background: #2196F3; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; font-size: 12px; margin-left: 5px; }
+        .file-rename:hover { background: #1976D2; }
+        .file-restore { background: #4CAF50; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; font-weight: bold; margin-top: 10px; }
+        .file-restore:hover { background: #45a049; }
+        .disk-info { background: #f0f0f0; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-weight: bold; }
+        #disk-d-info { display: none; }
+        #calculator-window { width: 300px; height: 400px; }
+        #calculator-display { width: 100%; height: 60px; font-size: 24px; text-align: right; padding: 0 10px; border: none; background: #f0f0f0; margin-bottom: 10px; }
+        .calc-button { width: 70px; height: 60px; font-size: 18px; border: none; background: #e0e0e0; cursor: pointer; border-radius: 5px; margin: 2px; }
+        .calc-button:hover { background: #d0d0d0; }
+        .calc-operator { background: #ff9500; color: white; }
+        .calc-operator:hover { background: #e68900; }
+        #messenger-window { width: 500px; height: 600px; }
+        #messenger-login, #messenger-chat { display: none; }
+        #messenger-register { display: block; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .form-button { background: #4CAF50; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .form-button:hover { background: #45a049; }
+        #chat-messages { height: 300px; overflow-y: scroll; border: 1px solid #ddd; padding: 10px; background: white; margin-bottom: 10px; border-radius: 4px; }
+        .message { margin-bottom: 5px; padding: 5px; background: #f0f0f0; border-radius: 4px; }
+        #chat-input { width: 80%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        #send-button { width: 18%; padding: 8px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        #notebook-window { background: black; color: #00ff00; font-family: 'Courier New', monospace; }
+        #notebook-window .window-header { background: #333; }
+        #notebook-window .window-content { padding: 20px; text-align: center; font-size: 18px; line-height: 1.5; }
+        #minecraft-window { width: 620px; height: 420px; }
+        #minecraft-container { width: 100%; height: 100%; image-rendering: pixelated; }
+        .network-option { display: flex; align-items: center; margin: 10px 0; }
+        .network-option input[type="password"] { margin-left: 10px; padding: 5px; border: 1px solid #ddd; border-radius: 3px; }
+        #peer-status { color: #666; font-size: 12px; margin-top: 5px; }
+        .download-progress { width: 300px; height: 20px; background-color: #333; border-radius: 10px; overflow: hidden; margin: 10px 0; }
+        .download-progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #00c6ff, #0072ff); transition: width linear; border-radius: 10px; }
+        #antivirus-scan-progress { display: none; margin: 10px 0; }
+        #antivirus-virus-list { margin-top: 10px; }
+        .virus-item { background: #ffdddd; padding: 5px; margin: 5px 0; border-radius: 3px; border-left: 4px solid #ff0000; }
+        #context-menu { position: fixed; background: rgba(255,255,255,0.95); color: black; padding: 10px; display: none; border-radius: 5px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 1002; }
+        #context-menu button { display: block; width: 100%; padding: 8px; margin: 2px 0; border: none; background: #f0f0f0; cursor: pointer; border-radius: 3px; }
+        #context-menu button:hover { background: #e0e0e0; }
+        #confirmation-dialog { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: black; padding: 20px; display: none; z-index: 1003; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); text-align: center; }
+        #confirmation-dialog button { margin: 10px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        #yes-btn { background: #ff4444; color: white; }
+        #no-btn { background: #4CAF50; color: white; }
+        #login-screen { width: 100vw; height: 100vh; background: linear-gradient(to bottom, #0f0f23, #1a1a2e); display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; z-index: 1002; flex-direction: column; color: white; }
+        #login-screen h2 { margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        #login-screen input { width: 300px; padding: 10px; margin: 10px 0; border: none; border-radius: 5px; font-size: 16px; }
+        #login-screen button { background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 10px; }
+        #login-screen button:hover { transform: translateY(-2px); }
+        #os-register, #os-login { text-align: center; }
+        #googlepay-window { width: 400px; height: 350px; top: 100px; left: 400px; }
+        #request-message { font-size: 16px; font-weight: bold; margin-bottom: 15px; text-align: center; color: #333; }
+        #request-sum { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; font-size: 16px; }
+        #request-textarea { width: 100%; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 10px; font-family: inherit; }
+        #send-request-btn { background: linear-gradient(45deg, #4285f4, #34a853); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        #send-request-btn:hover { background: linear-gradient(45deg, #3367d6, #2d8e3e); }
+        #request-status { margin-top: 10px; text-align: center; color: #666; }
+        #admin-section { margin-top: 15px; padding: 10px; background: #f0f0f0; border-radius: 5px; display: none; }
+        #admin-section input { width: 100px; margin-right: 5px; }
+        #admin-section button { padding: 5px 10px; background: #ff9800; color: white; border: none; border-radius: 3px; cursor: pointer; }
     </style>
-    <!-- NEW: Firebase SDK для Realtime Database -->
     <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
-    <!-- Убрал Firebase скрипты, так как используем localStorage -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/PointerLockControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/postprocessing/EffectComposer.js"></script>
@@ -909,7 +153,7 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/shaders/PixelShader.js"></script>
 </head>
 <body>
-    <!-- NEW: Экран логина/регистрации OS -->
+    <!-- Весь HTML body из предыдущего кода — вставь полностью: login-screen, install-screen, boot-screen, loading-screen, bsod, rsod, cmd-window, confirmation-dialog, desktop с иконками, taskbar, start-menu, context-menu, все окна (internet, files, browser, antivirus, calculator, minecraft, messenger, notebook, googlepay), virus-alert -->
     <div id="login-screen">
         <h2>Вход в OS</h2>
         <div id="os-register">
@@ -926,19 +170,15 @@
         </div>
     </div>
 
-    <!-- Твой оригинальный body без изменений -->
-    <!-- Экран установки OS -->
     <div id="install-screen">
         <div id="install-text">Добро пожаловать в установку OS!</div>
         <button id="install-button">Установить OS</button>
     </div>
 
-    <!-- Экран загрузки (выключенный ПК) -->
     <div id="boot-screen">
         <button id="boot-button">ЗАПУСК PC</button>
     </div>
 
-    <!-- Анимация загрузки -->
     <div id="loading-screen">
         <div id="loading-progress">
             <div id="loading-bar"></div>
@@ -946,32 +186,23 @@
         <div id="loading-text">Загрузка...</div>
     </div>
 
-    <!-- BSOD -->
     <div id="bsod">
         <h1>*** STOP: 0x0000007B (0xF78D2524, 0xC0000034, 0x00000000, 0x00000000)</h1>
-        <p>INACCESSIBLE_BOOT_DEVICE<br><br>
-        Техническая информация:<br>
-        *** STOP: 0x0000007B INACCESSIBLE_BOOT_DEVICE<br><br>
-        Ядро системы повреждено. Система не может загрузиться.<br>
-        Нажмите кнопку для восстановления.</p>
+        <p>INACCESSIBLE_BOOT_DEVICE<br><br>Техническая информация:<br>*** STOP: 0x0000007B INACCESSIBLE_BOOT_DEVICE<br><br>Ядро системы повреждено. Система не может загрузиться.<br>Нажмите кнопку для восстановления.</p>
         <button onclick="startSystemRestore()">Восстановить систему</button>
     </div>
 
-    <!-- RSOD -->
     <div id="rsod">
         <h1>*** STOP: RED SCREEN OF DEATH ***</h1>
-        <p>CRITICAL ERROR: HIBERNATION/PAGEFILE CORRUPTED<br><br>
-        Нажмите ПРОБЕЛ для открытия командной строки восстановления.</p>
+        <p>CRITICAL ERROR: HIBERNATION/PAGEFILE CORRUPTED<br><br>Нажмите ПРОБЕЛ для открытия командной строки восстановления.</p>
     </div>
 
-    <!-- Командная строка -->
     <div id="cmd-window">
         <div id="cmd-output">C:\Recovery> </div>
         <input type="text" id="cmd-input" autofocus onkeydown="handleCmd(event)">
         <div id="restore-dots"></div>
     </div>
 
-    <!-- Диалог подтверждения -->
     <div id="confirmation-dialog">
         <p>Вы точно хотите это сделать?!</p>
         <button id="yes-btn" onclick="confirmDelete()">Да</button>
@@ -979,7 +210,6 @@
     </div>
 
     <div id="desktop">
-        <!-- Иконки на десктопе -->
         <div class="icon" id="files-icon" style="top: 20px; left: 20px;" ondblclick="openWindow('files')">
             <img src="https://img.icons8.com/color/48/folder.png" alt="Files">
             <span>Файлы</span>
@@ -1000,14 +230,12 @@
             <img src="https://img.icons8.com/color/48/calculator.png" alt="Calculator">
             <span>Калькулятор</span>
         </div>
-        <!-- NEW: Иконка Google Pay -->
         <div class="icon" id="googlepay-icon" ondblclick="openWindow('googlepay')">
             <img src="https://img.icons8.com/color/48/google-wallet.png" alt="Google Pay">
             <span>Google Pay</span>
         </div>
     </div>
-    
-    <!-- Панель задач -->
+
     <div id="taskbar">
         <button id="start-button">Start</button>
         <div id="taskbar-apps"></div>
@@ -1015,22 +243,20 @@
         <div id="clock"></div>
         <div id="balance">Баланс: $<span id="balance-value">0</span></div>
     </div>
-    
-    <!-- UPDATED: Меню Start с кнопкой выхода -->
+
     <div id="start-menu">
         <button onclick="shutdown()">Выключить</button>
         <button onclick="restart()">Перезагрузить</button>
-        <button onclick="logoutOS()">Выйти из аккаунта</button> <!-- NEW: -->
+        <button onclick="logoutOS()">Выйти из аккаунта</button>
     </div>
 
-    <!-- Контекстное меню -->
     <div id="context-menu">
         <button onclick="createNewFile()">Новый файл</button>
         <button onclick="createNewFolder()">Новая папка</button>
         <button onclick="openDesktopSettings()">Настройки рабочего стола</button>
     </div>
-    
-    <!-- Окно подключения к интернету -->
+
+    <!-- Все окна: internet-window, files-window, browser-window, antivirus-window, calculator-window, minecraft-window, messenger-window, notebook-window, googlepay-window — вставь их HTML из оригинала -->
     <div class="window" id="internet-window" style="top: 100px; left: 200px; width: 400px;">
         <div class="window-header">
             <span>Подключение к сети</span>
@@ -1056,7 +282,6 @@
         </div>
     </div>
 
-    <!-- Окно файлов -->
     <div class="window" id="files-window" style="top: 100px; left: 100px;">
         <div class="window-header">
             <span>Файлы</span>
@@ -1074,7 +299,6 @@
         </div>
     </div>
 
-    <!-- Окно браузера -->
     <div class="window" id="browser-window" style="top: 50px; left: 200px; width: 600px; height: 400px;">
         <div class="window-header">
             <span>Браузер</span>
@@ -1095,7 +319,6 @@
         </div>
     </div>
 
-    <!-- Окно антивируса -->
     <div class="window" id="antivirus-window" style="top: 150px; left: 300px;">
         <div class="window-header">
             <span>Антивирус</span>
@@ -1118,7 +341,6 @@
         </div>
     </div>
 
-    <!-- Окно Калькулятора -->
     <div class="window" id="calculator-window" style="top: 50px; left: 50px;">
         <div class="window-header">
             <span>Калькулятор</span>
@@ -1152,7 +374,6 @@
         </div>
     </div>
 
-    <!-- Окно Minecraft 3D -->
     <div class="window" id="minecraft-window" style="top: 50px; left: 50px;">
         <div class="window-header">
             <span>Minecraft 3D</span>
@@ -1167,7 +388,6 @@
         </div>
     </div>
 
-    <!-- UPDATED: Окно Мессенджера (теперь использует localStorage для сообщений) -->
     <div class="window" id="messenger-window" style="top: 100px; left: 100px;">
         <div class="window-header">
             <span>Мессенджер</span>
@@ -1220,7 +440,6 @@
         </div>
     </div>
 
-    <!-- Окно Супер Артёмский блокнот -->
     <div class="window" id="notebook-window" style="top: 100px; left: 100px; width: 500px; height: 300px;">
         <div class="window-header">
             <span>Супер Артёмский блокнот</span>
@@ -1235,7 +454,6 @@
         </div>
     </div>
 
-    <!-- NEW: Окно Google Pay -->
     <div class="window" id="googlepay-window">
         <div class="window-header">
             <span>Google Pay</span>
@@ -1247,22 +465,29 @@
         </div>
         <div class="window-content">
             <p id="request-message">Попроси Админа Дать Тебе денег!</p>
+            <input type="number" id="request-sum" placeholder="Сумма ($)" min="1" max="1000">
             <textarea id="request-textarea" placeholder="Напиши сообщение админу..."></textarea>
             <button id="send-request-btn" onclick="sendMoneyRequest()">Отправить запрос</button>
             <p id="request-status"></p>
+            <div id="admin-section">
+                <h4>Админ-панель (только для admin):</h4>
+                <input type="text" id="admin-user" placeholder="Пользователь">
+                <input type="number" id="admin-amount" placeholder="Сумма ($)" min="1">
+                <button onclick="approveRequest()">Одобрить запрос</button>
+                <p>Или вручную добавь 'approved: true' и 'sum: X' в Firebase для авто-обновления.</p>
+            </div>
         </div>
     </div>
 
-    <!-- Алерт вируса -->
     <div id="virus-alert">
         <p>ВИРУС! Система заражена!</p>
         <button onclick="document.getElementById('virus-alert').style.display = 'none';">OK</button>
     </div>
 
     <script>
-        // NEW: Firebase config (замени на свой реальный config из Firebase Console)
+        // Firebase config — ЗАМЕНИ НА РЕАЛЬНЫЙ!
         const firebaseConfig = {
-            apiKey: "AIzaSyD...example", // Твой API Key
+            apiKey: "AIzaSyD...example", // Твой реальный из Console
             authDomain: "your-project.firebaseapp.com",
             databaseURL: "https://your-project-default-rtdb.firebaseio.com/",
             projectId: "your-project",
@@ -1273,13 +498,20 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // NEW: localStorage функции для хранения пользователей и данных
-        function getUsers() {
+        // UPDATED: Separate localStorage for OS and Messenger
+        function getOSUsers() {
             const usersStr = localStorage.getItem('osUsers') || '{}';
             return JSON.parse(usersStr);
         }
-        function saveUsers(users) {
+        function saveOSUsers(users) {
             localStorage.setItem('osUsers', JSON.stringify(users));
+        }
+        function getMessengerUsers() {
+            const usersStr = localStorage.getItem('messengerUsers') || '{}';
+            return JSON.parse(usersStr);
+        }
+        function saveMessengerUsers(users) {
+            localStorage.setItem('messengerUsers', JSON.stringify(users));
         }
         function getMessages() {
             const msgsStr = localStorage.getItem('chatMessages') || '[]';
@@ -1289,8 +521,9 @@
             localStorage.setItem('chatMessages', JSON.stringify(messages));
         }
 
-        // UPDATED: Глобальные переменные (теперь с localStorage)
-        let currentUser = null; // Глобальный для OS и мессенджера
+        // Глобальные переменные
+        let currentOSUser = null; // Для OS
+        let currentChatUser = null; // Для чата
         let isInfected = false;
         let minecraftInstalled = false;
         let connection = 'none';
@@ -1302,15 +535,35 @@
         let hasDiskD = false;
         let balance = 0;
         let ultraWifi = false;
-        let files = []; // Загружается из localStorage
+        let files = [];
         let virusInterval;
         let calcDisplay = '';
         let rsodTriggeredFiles = [];
         let restoreInterval;
         let pendingDeleteFile = null;
         let scanning = false;
+        let moneyRequestsListener = null;
 
-        // NEW: Функции для OS-логина/регистрации (localStorage)
+        // NEW: Listener для moneyRequests
+        function setupMoneyRequestsListener() {
+            if (moneyRequestsListener) database.ref('moneyRequests').off('child_added', moneyRequestsListener);
+            moneyRequestsListener = (snapshot) => {
+                const request = snapshot.val();
+                if (request && request.user === currentOSUser?.username && request.approved === true) {
+                    const sum = request.sum || 0;
+                    if (sum > 0) {
+                        balance += sum;
+                        updateBalance();
+                        saveOSUserData();
+                        alert(`Админ одобрил! +$${sum} на баланс. Новый баланс: $${balance}`);
+                        snapshot.ref.remove();
+                    }
+                }
+            };
+            database.ref('moneyRequests').on('child_added', moneyRequestsListener);
+        }
+
+        // OS Functions (with debug)
         function showOSRegister() {
             document.getElementById('os-register').style.display = 'block';
             document.getElementById('os-login').style.display = 'none';
@@ -1323,12 +576,13 @@
         function registerOSUser() {
             const username = document.getElementById('reg-username-os').value.trim();
             const password = document.getElementById('reg-password-os').value;
+            console.log('OS Register attempt:', username, password); // DEBUG
             if (username && password) {
-                const users = getUsers();
+                const users = getOSUsers();
                 if (users[username]) {
+                    console.log('OS User exists:', username); // DEBUG
                     alert('Пользователь уже существует!');
                 } else {
-                    // Дефолтные данные
                     const defaultFiles = [
                         { name: 'system32.dll', desc: 'Основной системный файл', size: '5 МБ', deleted: false },
                         { name: 'boot.ini', desc: 'Конфигурация загрузки', size: '1 КБ', deleted: false },
@@ -1354,11 +608,13 @@
                         installedApps: { antivirus: false, minecraft: false, calculator: false },
                         files: defaultFiles
                     };
-                    saveUsers(users);
+                    saveOSUsers(users);
+                    console.log('OS Registered:', username, users[username]); // DEBUG
                     alert('Регистрация успешна! Теперь войдите.');
                     showOSLogin();
                 }
             } else {
+                console.log('OS Register fail: empty fields'); // DEBUG
                 alert('Заполните все поля!');
             }
         }
@@ -1366,11 +622,12 @@
         function loginOSUser() {
             const username = document.getElementById('login-username-os').value.trim();
             const password = document.getElementById('login-password-os').value;
+            console.log('OS Login attempt:', username, password); // DEBUG
             if (username && password) {
-                const users = getUsers();
+                const users = getOSUsers();
+                console.log('OS Users loaded:', Object.keys(users)); // DEBUG
                 if (users[username] && users[username].password === password) {
-                    currentUser = { username: username };
-                    // Загружаем данные
+                    currentOSUser = { username: username };
                     const userData = users[username];
                     balance = userData.balance || 0;
                     hasDiskD = userData.hasDiskD || false;
@@ -1393,21 +650,25 @@
                     document.getElementById('taskbar').style.display = 'flex';
                     renderFilesList();
                     if (isInfected) setTimeout(showVirusAlert, 1000);
+                    setupMoneyRequestsListener();
+                    document.getElementById('admin-section').style.display = username === 'admin' ? 'block' : 'none';
+                    console.log('OS Login success:', username); // DEBUG
                     alert('Добро пожаловать, ' + username + '!');
                 } else {
+                    console.log('OS Login fail: no user or wrong pass'); // DEBUG
                     alert('Неверный логин или пароль!');
                 }
             } else {
+                console.log('OS Login fail: empty fields'); // DEBUG
                 alert('Заполните все поля!');
             }
         }
 
-        // NEW: Сохранение данных пользователя в localStorage
-        function saveUserData() {
-            if (!currentUser) return;
-            const users = getUsers();
-            users[currentUser.username] = {
-                ...users[currentUser.username],
+        function saveOSUserData() {
+            if (!currentOSUser) return;
+            const users = getOSUsers();
+            users[currentOSUser.username] = {
+                ...users[currentOSUser.username],
                 balance,
                 hasDiskD,
                 ultraWifi,
@@ -1419,12 +680,15 @@
                     calculator: document.getElementById('calculator-icon').style.display !== 'none'
                 }
             };
-            saveUsers(users);
+            saveOSUsers(users);
         }
 
-        // NEW: Выход из аккаунта
         function logoutOS() {
-            currentUser = null;
+            if (moneyRequestsListener) {
+                database.ref('moneyRequests').off('child_added', moneyRequestsListener);
+                moneyRequestsListener = null;
+            }
+            currentOSUser = null;
             document.getElementById('start-menu').style.display = 'none';
             shutdown();
             setTimeout(() => {
@@ -1433,24 +697,106 @@
             }, 1000);
         }
 
-        // UPDATED: Установка OS (теперь к экрану логина)
-        document.getElementById('install-button').onclick = function() {
-            document.getElementById('install-screen').style.display = 'none';
-            showLoadingAdvanced('Установка OS...', ['Инициализация...', 'Копирование файлов...', 'Настройка реестра...', 'Завершение...'], function() {
-                document.getElementById('boot-screen').style.display = 'flex';
-            }, 5000);
-        };
+        // Messenger Functions (separate storage, with debug)
+        function showRegister() {
+            document.getElementById('messenger-register').style.display = 'block';
+            document.getElementById('messenger-login').style.display = 'none';
+            document.getElementById('messenger-chat').style.display = 'none';
+        }
+        function showLogin() {
+            document.getElementById('messenger-register').style.display = 'none';
+            document.getElementById('messenger-login').style.display = 'block';
+            document.getElementById('messenger-chat').style.display = 'none';
+        }
+        function registerUser() {
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const number = document.getElementById('reg-number').value.trim();
+            console.log('Chat Register attempt:', username, password, number); // DEBUG
+            if (username && password && number) {
+                const users = getMessengerUsers();
+                if (users[username]) {
+                    console.log('Chat User exists:', username); // DEBUG
+                    alert('Пользователь с таким именем уже существует!');
+                } else {
+                    users[username] = { password, id: number };
+                    saveMessengerUsers(users);
+                    console.log('Chat Registered:', username, users[username]); // DEBUG
+                    alert('Регистрация успешна! Ваш ID: ' + number);
+                    showLogin();
+                }
+            } else {
+                console.log('Chat Register fail: empty fields'); // DEBUG
+                alert('Заполните все поля!');
+            }
+        }
+        function loginUser() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            console.log('Chat Login attempt:', username, password); // DEBUG
+            if (username && password) {
+                const users = getMessengerUsers();
+                console.log('Chat Users loaded:', Object.keys(users)); // DEBUG
+                if (users[username] && users[username].password === password) {
+                    currentChatUser = { username, id: users[username].id || 'default' };
+                    showChat();
+                    console.log('Chat Login success:', username); // DEBUG
+                } else {
+                    console.log('Chat Login fail: no user or wrong pass'); // DEBUG
+                    alert('Неверный пароль!');
+                }
+            } else {
+                console.log('Chat Login fail: empty fields'); // DEBUG
+                alert('Заполните все поля!');
+            }
+        }
+        function logout() {
+            currentChatUser = null;
+            document.getElementById('chat-messages').innerHTML = '';
+            showRegister();
+        }
+        function showChat() {
+            if (!currentChatUser) {
+                alert('Сначала войдите!');
+                return;
+            }
+            document.getElementById('messenger-register').style.display = 'none';
+            document.getElementById('messenger-login').style.display = 'none';
+            document.getElementById('messenger-chat').style.display = 'block';
+            document.getElementById('user-id').innerText = currentChatUser.username;
+            loadMessages();
+        }
+        function loadMessages() {
+            const messages = getMessages();
+            const messagesDiv = document.getElementById('chat-messages');
+            messagesDiv.innerHTML = '';
+            messages.forEach(msg => addMessage(msg.from + ': ' + msg.message));
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        function sendMessage() {
+            const messageInput = document.getElementById('chat-input');
+            const message = messageInput.value.trim();
+            if (message && currentChatUser) {
+                const messages = getMessages();
+                messages.push({
+                    from: currentChatUser.username,
+                    message: message,
+                    timestamp: Date.now()
+                });
+                saveMessages(messages);
+                messageInput.value = '';
+                loadMessages();
+            }
+        }
+        function addMessage(msg) {
+            const messagesDiv = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerText = msg;
+            messagesDiv.appendChild(messageDiv);
+        }
 
-        // UPDATED: Запуск OS (теперь к экрану логина)
-        document.getElementById('boot-button').onclick = function() {
-            document.getElementById('boot-screen').style.display = 'none';
-            showLoadingAdvanced('Загрузка OS...', ['Загрузка ядра...', 'Инициализация драйверов...', 'Запуск служб...', 'Готово!'], function() {
-                document.getElementById('login-screen').style.display = 'flex';
-                showOSRegister(); // Показываем регистрацию по умолчанию
-            }, 4000);
-        };
-
-        // Твой оригинальный код функций (updateBalance, showLoadingAdvanced, updateClock, etc.)
+        // Остальные функции (updateBalance, showLoadingAdvanced, updateClock, openWindow, closeWindow, etc.) — вставь из оригинального кода полностью
         function updateBalance() {
             document.getElementById('balance-value').innerText = balance;
         }
@@ -1532,8 +878,10 @@
                 document.getElementById('antivirus-virus-list').innerHTML = '';
             }
             if (id === 'googlepay') {
+                document.getElementById('request-sum').value = '';
                 document.getElementById('request-textarea').value = '';
                 document.getElementById('request-status').innerText = '';
+                document.getElementById('admin-section').style.display = currentOSUser && currentOSUser.username === 'admin' ? 'block' : 'none';
             }
             if (isInfected) {
                 setTimeout(showVirusAlert, 1000);
@@ -1664,7 +1012,6 @@
             document.getElementById('free-space-d').innerText = freeSpaceD.toFixed(2);
         }
 
-        // UPDATED: Покупки (с сохранением)
         function buyDiskD() {
             if (balance < 100) {
                 alert('Недостаточно средств! Баланс: $' + balance);
@@ -1676,7 +1023,7 @@
             document.getElementById('disk-d-info').style.display = 'block';
             updateBalance();
             updateFreeSpaceD();
-            saveUserData();
+            saveOSUserData();
             alert('Диск D на 200 ГБ куплен и установлен!');
         }
 
@@ -1688,7 +1035,7 @@
             balance -= 20;
             ultraWifi = true;
             updateBalance();
-            saveUserData();
+            saveOSUserData();
             alert('ULTRAWIFI куплен! Теперь загрузки за 2с, открытие страниц за 1с.');
         }
 
@@ -1722,7 +1069,7 @@
                 if (file) {
                     file.name = newName.trim();
                     renderFilesList();
-                    saveUserData();
+                    saveOSUserData();
                     alert('Файл переименован.');
                 }
             }
@@ -1746,12 +1093,11 @@
             pendingDeleteFile = null;
         }
 
-        // UPDATED: Удаление файла (с сохранением)
         function deleteFile(name) {
             const file = files.find(f => f.name === name);
             if (file) {
                 file.deleted = true;
-                saveUserData();
+                saveOSUserData();
                 if (name === 'kernel.sys') {
                     document.body.style.backgroundColor = 'white';
                     document.body.style.color = 'black';
@@ -1867,14 +1213,14 @@
 
         function restoreAllFiles(fromBSOD = false) {
             files.forEach(f => f.deleted = false);
-            saveUserData();
+            saveOSUserData();
             if (!fromBSOD) {
                 alert('Все системные файлы восстановлены.');
                 renderFilesList();
             }
         }
 
-        // Перетаскивание окон (оригинал)
+        // Перетаскивание окон
         const windows = document.querySelectorAll('.window');
         windows.forEach(win => {
             const header = win.querySelector('.window-header');
@@ -1905,7 +1251,7 @@
             };
         });
 
-        // Браузер (оригинал, с сохранением в скачиваниях)
+        // Браузер functions
         function loadHome() {
             const addressInput = document.getElementById('browser-address');
             addressInput.value = '';
@@ -1978,12 +1324,11 @@
             }, 10);
         }
 
-        // UPDATED: Скачивания (с сохранением)
         function downloadAntivirus() {
             const page = document.getElementById('browser-page');
             downloadWithDiskChoice(0.02, function() {
                 document.getElementById('antivirus-icon').style.display = 'block';
-                saveUserData();
+                saveOSUserData();
             }, 'Антивирус скачан!', page);
         }
 
@@ -2004,7 +1349,7 @@
                     desktop.classList.add('infected');
                     if (virusInterval) clearInterval(virusInterval);
                     virusInterval = setInterval(showVirusAlert, 3000);
-                    saveUserData();
+                    saveOSUserData();
                     alert('Вирус скачан! Система заражена.');
                     const progressContainer = page.querySelector('.download-progress');
                     if (progressContainer) progressContainer.remove();
@@ -2019,7 +1364,7 @@
             downloadWithDiskChoice(20, function() {
                 minecraftInstalled = true;
                 document.getElementById('minecraft-icon').style.display = 'block';
-                saveUserData();
+                saveOSUserData();
             }, 'Minecraft 3D скачан!', page);
         }
 
@@ -2034,7 +1379,7 @@
             const page = document.getElementById('browser-page');
             downloadWithDiskChoice(0.005, function() {
                 document.getElementById('calculator-icon').style.display = 'block';
-                saveUserData();
+                saveOSUserData();
             }, 'Калькулятор скачан!', page);
         }
 
@@ -2083,7 +1428,7 @@
                         }
                         scanText.innerText = 'Вирусы удалены!';
                         virusList.innerHTML = '';
-                        saveUserData();
+                        saveOSUserData();
                         alert('Вирусы удалены!');
                     }, 2000);
                 } else {
@@ -2095,7 +1440,7 @@
             }, 8000);
         }
 
-        // Калькулятор (оригинал)
+        // Калькулятор
         function appendToCalc(value) {
             calcDisplay += value;
             document.getElementById('calculator-display').value = calcDisplay;
@@ -2114,128 +1459,9 @@
             }
         }
 
-        // UPDATED: Мессенджер (localStorage вместо Firebase)
-        function showRegister() {
-            document.getElementById('messenger-register').style.display = 'block';
-            document.getElementById('messenger-login').style.display = 'none';
-            document.getElementById('messenger-chat').style.display = 'none';
-        }
-        function showLogin() {
-            document.getElementById('messenger-register').style.display = 'none';
-            document.getElementById('messenger-login').style.display = 'block';
-            document.getElementById('messenger-chat').style.display = 'none';
-        }
-        function registerUser() {
-            const username = document.getElementById('reg-username').value.trim();
-            const password = document.getElementById('reg-password').value;
-            const number = document.getElementById('reg-number').value.trim();
-            if (username && password && number) {
-                const users = getUsers();
-                if (users[username]) {
-                    alert('Пользователь с таким именем уже существует!');
-                } else {
-                    users[username] = { password, id: number }; // Только для мессенджера, если нет OS-аккаунта
-                    saveUsers(users);
-                    alert('Регистрация успешна! Ваш ID: ' + number);
-                    showLogin();
-                }
-            } else {
-                alert('Заполните все поля!');
-            }
-        }
-        function loginUser() {
-            const username = document.getElementById('login-username').value.trim();
-            const password = document.getElementById('login-password').value;
-            if (username && password) {
-                const users = getUsers();
-                if (users[username] && users[username].password === password) {
-                    currentUser = { username, id: users[username].id || 'default' }; // Фикс: id по умолчанию, если нет
-                    showChat();
-                } else {
-                    alert('Неверный пароль!');
-                }
-            } else {
-                alert('Заполните все поля!');
-            }
-        }
-        function logout() {
-            currentUser = null; // Только для мессенджера
-            document.getElementById('chat-messages').innerHTML = '';
-            showRegister();
-        }
-        function showChat() {
-            if (!currentUser) {
-                alert('Сначала войдите в OS или мессенджер!');
-                return;
-            }
-            document.getElementById('messenger-register').style.display = 'none';
-            document.getElementById('messenger-login').style.display = 'none';
-            document.getElementById('messenger-chat').style.display = 'block';
-            document.getElementById('user-id').innerText = currentUser.username;
-            loadMessages();
-        }
-        function loadMessages() {
-            const messages = getMessages();
-            const messagesDiv = document.getElementById('chat-messages');
-            messagesDiv.innerHTML = '';
-            messages.forEach(msg => addMessage(msg.from + ': ' + msg.message));
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-        function sendMessage() {
-            const messageInput = document.getElementById('chat-input');
-            const message = messageInput.value.trim();
-            if (message && currentUser) {
-                const messages = getMessages();
-                messages.push({
-                    from: currentUser.username,
-                    message: message,
-                    timestamp: Date.now()
-                });
-                saveMessages(messages);
-                messageInput.value = '';
-                loadMessages();
-            }
-        }
-        function addMessage(msg) {
-            const messagesDiv = document.getElementById('chat-messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message';
-            messageDiv.innerText = msg;
-            messagesDiv.appendChild(messageDiv);
-        }
-
-        // NEW: Функция для Google Pay - отправка запроса на Firebase
-        function sendMoneyRequest() {
-            if (!currentUser) {
-                alert('Сначала войдите в систему!');
-                return;
-            }
-            const message = document.getElementById('request-textarea').value.trim();
-            if (!message) {
-                alert('Напишите сообщение!');
-                return;
-            }
-            const requestData = {
-                user: currentUser.username,
-                message: message,
-                timestamp: Date.now(),
-                balance: balance
-            };
-            const requestsRef = database.ref('moneyRequests').push();
-            requestsRef.set(requestData).then(() => {
-                document.getElementById('request-status').innerText = 'Запрос отправлен! Админ увидит его в Firebase.';
-                document.getElementById('request-textarea').value = '';
-                setTimeout(() => {
-                    document.getElementById('request-status').innerText = '';
-                }, 5000);
-            }).catch((error) => {
-                alert('Ошибка отправки: ' + error.message);
-            });
-        }
-
-        // Контекстное меню (оригинал)
+        // Контекстное меню
         document.addEventListener('mousedown', function(event) {
-            if (event.button === 1) {
+            if (event.button === 2) { // Правый клик
                 event.preventDefault();
                 const contextMenu = document.getElementById('context-menu');
                 contextMenu.style.left = event.pageX + 'px';
@@ -2250,7 +1476,7 @@
             const name = prompt('Имя нового файла:');
             if (name) {
                 files.push({ name: name, desc: 'Новый файл', size: '0 КБ', deleted: false });
-                saveUserData();
+                saveOSUserData();
                 alert('Файл создан: ' + name);
                 if (document.getElementById('files-window').style.display !== 'none') {
                     renderFilesList();
@@ -2272,7 +1498,7 @@
             document.getElementById('context-menu').style.display = 'none';
         }
 
-        // Minecraft (оригинал)
+        // Minecraft
         let scene, camera, renderer, controls, composer;
         function initMinecraft() {
             const container = document.getElementById('minecraft-container');
@@ -2377,13 +1603,89 @@
             animate();
         }
 
-        // Инициализация (начинаем с экрана установки OS)
+        // Google Pay
+        function sendMoneyRequest() {
+            if (!currentOSUser) {
+                alert('Сначала войдите в систему!');
+                return;
+            }
+            const sum = parseInt(document.getElementById('request-sum').value) || 0;
+            const message = document.getElementById('request-textarea').value.trim();
+            if (sum <= 0 || !message) {
+                alert('Укажите сумму (>0) и сообщение!');
+                return;
+            }
+            const requestData = {
+                user: currentOSUser.username,
+                sum: sum,
+                message: message,
+                timestamp: Date.now(),
+                balance: balance,
+                approved: false
+            };
+            const requestsRef = database.ref('moneyRequests').push();
+            requestsRef.set(requestData).then(() => {
+                document.getElementById('request-status').innerText = `Запрос на $${sum} отправлен! Админ увидит в Firebase.`;
+                document.getElementById('request-sum').value = '';
+                document.getElementById('request-textarea').value = '';
+                setTimeout(() => {
+                    document.getElementById('request-status').innerText = '';
+                }, 5000);
+            }).catch((error) => {
+                alert('Ошибка отправки: ' + error.message + '. Проверь config и правила БД!');
+            });
+        }
+
+        function approveRequest() {
+            const user = document.getElementById('admin-user').value.trim();
+            const amount = parseInt(document.getElementById('admin-amount').value) || 0;
+            if (!user || amount <= 0) {
+                alert('Укажите пользователя и сумму!');
+                return;
+            }
+            if (currentOSUser.username !== 'admin') {
+                alert('Только админ может одобрять!');
+                return;
+            }
+            const users = getOSUsers();
+            if (users[user]) {
+                users[user].balance += amount;
+                saveOSUsers(users);
+                if (user === currentOSUser.username) {
+                    balance += amount;
+                    updateBalance();
+                }
+                alert(`Одобрено! +$${amount} для ${user}`);
+                document.getElementById('admin-user').value = '';
+                document.getElementById('admin-amount').value = '';
+            } else {
+                alert('Пользователь не найден!');
+            }
+        }
+
+        // Инициализация
         document.getElementById('install-screen').style.display = 'flex';
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('boot-screen').style.display = 'none';
         document.getElementById('desktop').style.display = 'none';
         document.getElementById('taskbar').style.display = 'none';
         updateFreeSpaceC();
+
+        // Install & Boot
+        document.getElementById('install-button').onclick = function() {
+            document.getElementById('install-screen').style.display = 'none';
+            showLoadingAdvanced('Установка OS...', ['Инициализация...', 'Копирование файлов...', 'Настройка реестра...', 'Завершение...'], function() {
+                document.getElementById('boot-screen').style.display = 'flex';
+            }, 5000);
+        };
+
+        document.getElementById('boot-button').onclick = function() {
+            document.getElementById('boot-screen').style.display = 'none';
+            showLoadingAdvanced('Загрузка OS...', ['Загрузка ядра...', 'Инициализация драйверов...', 'Запуск служб...', 'Готово!'], function() {
+                document.getElementById('login-screen').style.display = 'flex';
+                showOSRegister();
+            }, 4000);
+        };
     </script>
 </body>
 </html>
